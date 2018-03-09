@@ -1,0 +1,25 @@
+---
+title: "stt simulations"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+library(dplyr)
+```
+
+```{r}
+set.seed(435)
+
+vel_patch <- as.data.frame(rnorm(30,mean=0.5,sd=0.3))
+colnames(vel_patch)<- c("u") 
+data<- mutate(vel_patch, coverage = ifelse(u > 0.3, 1, 5))
+    data$weight_u<-data$u*data$coverage
+       data$U<- 11.197*((data$u)^0.4419)
+       data$firstU<-11.197*0.44419*((data$u)^0.4419-1)
+       data$secondU<- 11.197*0.4419*(0.4419-1)*((data$u)^((0.4419-1)-1))
+       
+  
+
+
+```
+
