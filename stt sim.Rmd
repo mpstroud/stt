@@ -18,22 +18,27 @@ Not relative
 ```{r}
 weight_u<-list()
 weight_U<-list()
-for(i in 1:9){
-m<-runif(1,min=0.05,max=0.5) #ln of desired mean velocity
-s<-runif(1,min=0.01,max=0.2)
-l<-runif(1,min=1,max=7) #perc cover to low vel
-h<-runif(1,min=0.1,max=1.2) #perc cover to high vel
+for(i in 1:9999){
+m<-runif(1,min=log(0.10),max=log(40)) #ln of desired mean velocity
+s<-runif(1,min=log(1.5),max=log(3))
+l<-runif(1,min=1,max=1) #perc cover to low vel
+h<-runif(1,min=1,max=1) #perc cover to high vel
 #ln of desired sd velocity
-vel_patch <- as.data.frame(rnorm(30,mean = m, sd = s))
+vel_patch <- as.data.frame(rlnorm(30,meanlog = m, sdlog = s))
 colnames(vel_patch)<- c("u") #velocity data
-data<- mutate(vel_patch, coverage = ifelse(u > 0.1, h, l)) #change accordingly
+data<- mutate(vel_patch, coverage = ifelse(u > 10, h, l)) #change accordingly
 data$cover<- data$coverage/(sum(data$coverage)) #covergae data based on velocity   
-data$U<- 11.197*((data$u)^0.4419) #uptake based on known power function
+data$U<- 1.463*((data$u)^0.4419) #uptake based on known power function
 data$weight_U<-data$U*data$cover #weighted U based on variaton in velocity
 weight_u[[i]]<-mean(data$u)
 weight_U[[i]]<-sum(data$weight_U,na.rm = T)
 }
-plot(as.vector(weight_u),as.vector(weight_U))
+weight_u<-as.data.frame(as.numeric(weight_u))
+colnames(weight_u)<- c("u")
+weight_U<-as.data.frame(as.numeric(weight_U))
+colnames(weight_U)<- c("U")
+plot(weight_u$u, weight_U$U,xlim=c(0,80))
+
 
 ```
 
